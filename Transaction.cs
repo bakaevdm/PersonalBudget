@@ -9,14 +9,29 @@ namespace PersonalBudget
 {
     public class Transaction
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Расход записывается со знаком -, доход — со знаком +.
+        /// </summary>
         public decimal Amount { get; set; }
-
+        
         public string Category { get; set; }
 
         public DateTime Date { get; set; }
 
-        public string Description { get; set; }
+        public string Comment { get; set; }
+
+        public static Transaction Create(int id, decimal amount, string category, string comment)
+        {
+            return new Transaction
+            {
+                Id = id,
+                Amount = amount,                
+                Category = category,
+                Comment = comment,
+                Date = DateTime.Now
+            };
+        }
     }
 }
