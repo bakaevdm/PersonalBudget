@@ -30,7 +30,7 @@ namespace PersonalBudget
                 Amount = amount,                
                 Category = category,
                 Comment = comment,
-                Date = DateTime.Now
+                Date = DateTime.Now.Date
             };
         }
     }
