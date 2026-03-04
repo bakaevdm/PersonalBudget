@@ -30,11 +30,9 @@ while (true)
     switch (numAction)
     {
         case 1:
-            Console.Clear();
-            Console.WriteLine("Добавление");
+            Console.Clear();            
 
-            decimal amount;
-            char action;
+            decimal amount;            
             do
             {
                 Console.Write("Сумма: ");
@@ -50,17 +48,38 @@ while (true)
                 }
             }
             while (true);
-            Console.Write("Категория: ");
-            var category = Console.ReadLine();
+
+            string category;
+            do
+            {
+                Console.Write("Категория: ");
+                category = Console.ReadLine();
+                if (!string.IsNullOrEmpty(category))
+                    break;
+
+                Console.WriteLine("Необходимо указать категорию");
+            }
+            while (true);
+
             Console.Write("Комментарий: ");
             var comment = Console.ReadLine();
 
-            dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
+            Console.Clear();
+
+            Console.WriteLine("Проверьте заполненые данные");
+            Console.WriteLine($"Сумма: {amount}");
+            Console.WriteLine($"Категория: {category}");
+            Console.WriteLine($"Коммент: {comment}");
+            Console.WriteLine();
+            Console.WriteLine("Сохранить? (Да/Нет)");
+            if ( Console.ReadLine() == "Да")
+                dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
+
             break;
         case 2:
             Console.Clear();
-            Console.WriteLine($"{"#", -4}{"Дата",-12}|{"Категория",-20}|{"Сумма",-20}|{"Комментарий",-15}|{"Баланс",-15}");
-            Console.WriteLine(new string('-', 86));
+            Console.WriteLine($"{"#", -4}|{"Дата",-12}|{"Категория",-20}|{"Сумма",-20}|{"Комментарий",-40}|{"Баланс",-15}");
+            Console.WriteLine(new string('-', 111));
 
             decimal runningBalance = 0;
             foreach (var item in dataTransaction.OrderBy(d => d.Id))
@@ -76,7 +95,7 @@ while (true)
                 Console.Write($"|{dateDisplay,-12}");
                 Console.Write($"|{item.Category,-20}");
                 Console.Write($"|{item.Amount,-20}");
-                Console.Write($"|{item.Comment,-15}");
+                Console.Write($"|{item.Comment,-40}");
                 Console.WriteLine($"|{runningBalance,-15}");
 
                 Console.ResetColor();
@@ -88,8 +107,7 @@ while (true)
             Console.WriteLine(dataTransaction.Select(d => d.Amount).Sum().ToString());            
             break;
         default:            
-            Console.WriteLine("Не опознанное действие");
-            
+            Console.WriteLine("Не опознанное действие");            
             break;
     }
 
