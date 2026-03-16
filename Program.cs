@@ -3,8 +3,8 @@ using System.Transactions;
 using System.Text.RegularExpressions;
 
 
-var dataTransaction = new List<PersonalBudget.Transaction>();
-int id = 1;
+var dataTransaction = FileService.Load();
+int id = dataTransaction.Any() ? dataTransaction.Max(t => t.Id) + 1 : 1;
 
 while (true)
 {
@@ -72,9 +72,11 @@ while (true)
             Console.WriteLine($"Коммент: {comment}");
             Console.WriteLine();
             Console.WriteLine("Сохранить? (Да/Нет)");
-            if ( Console.ReadLine() == "Да")
+            if (Console.ReadLine() == "Да")
+            {
                 dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
-
+                FileService.Save(dataTransaction);    
+            }
             break;
         case 2:
             Console.Clear();
