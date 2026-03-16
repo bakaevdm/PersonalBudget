@@ -3,8 +3,9 @@ using System.Transactions;
 using System.Text.RegularExpressions;
 
 
-var dataTransaction = FileService.Load();
-int id = dataTransaction.Any() ? dataTransaction.Max(t => t.Id) + 1 : 1;
+
+//int id = dataTransaction.Any() ? dataTransaction.Max(t => t.Id) + 1 : 1;
+var budgetManager = new BudgetManager(FileService.Load());
 
 while (true)
 {
@@ -73,10 +74,9 @@ while (true)
             Console.WriteLine();
             Console.WriteLine("Сохранить? (Да/Нет)");
             if (Console.ReadLine() == "Да")
-            {
-                dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
-                FileService.Save(dataTransaction);    
-            }
+                budgetManager.AddTransaction(amount, category, comment);
+            //dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
+            //FileService.Save(dataTransaction);    
             break;
         case 2:
             Console.Clear();
@@ -84,7 +84,7 @@ while (true)
             Console.WriteLine(new string('-', 111));
 
             decimal runningBalance = 0;
-            foreach (var item in dataTransaction.OrderBy(d => d.Id))
+            foreach (var item in budgetManager.GetAllTransactions())
             {
                 runningBalance += item.Amount;
                 Console.ForegroundColor = item.Amount >= 0 ? ConsoleColor.Green : ConsoleColor.Red;
@@ -106,7 +106,7 @@ while (true)
         case 3:
             Console.Clear();
             Console.Write("Текущий баланс: ");
-            Console.WriteLine(dataTransaction.Select(d => d.Amount).Sum().ToString());            
+            Console.WriteLine(budgetManager.GetBalance());            
             break;
         default:            
             Console.WriteLine("Не опознанное действие");            
