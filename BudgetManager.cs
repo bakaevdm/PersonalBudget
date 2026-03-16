@@ -18,10 +18,12 @@ namespace PersonalBudget
             _nextId = _transactions.Any() ? _transactions.Max(t => t.Id) + 1 : 1;
         }
 
-        public void AddTransaction(decimal amount, string category, string comment)
+        public Transaction AddTransaction(decimal amount, string category, string comment)
         {
-            _transactions.Add(Transaction.Create(_nextId++, amount, category, comment));
+            var transaction = Transaction.Create(_nextId++, amount, category, comment);
+            _transactions.Add(transaction);
             FileService.Save(_transactions);
+            return transaction;
         }
 
         public List<Transaction> GetAllTransactions() => _transactions.OrderBy(d => d.Id).ToList();
