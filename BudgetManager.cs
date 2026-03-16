@@ -27,5 +27,13 @@ namespace PersonalBudget
         public List<Transaction> GetAllTransactions() => _transactions.OrderBy(d => d.Id).ToList();
 
         public decimal GetBalance() => _transactions.Select(d => d.Amount).Sum();
+
+        public void RemoveTransaction(int id)
+        {
+            _transactions.RemoveAll(t => t.Id == id);
+            FileService.Save(_transactions);
+        }
+
+        public bool TransactionExists(int id) => _transactions.Any(t => t.Id == id);        
     }
 }

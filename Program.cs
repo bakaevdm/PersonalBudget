@@ -3,8 +3,6 @@ using System.Transactions;
 using System.Text.RegularExpressions;
 
 
-
-//int id = dataTransaction.Any() ? dataTransaction.Max(t => t.Id) + 1 : 1;
 var budgetManager = new BudgetManager(FileService.Load());
 
 while (true)
@@ -13,9 +11,10 @@ while (true)
     Console.WriteLine("1. Добавить операцию");
     Console.WriteLine("2. Показать все операции");
     Console.WriteLine("3. Показать текущий баланс");
-    Console.WriteLine("4. Выход");
+    Console.WriteLine("4. Удалить операцию");
+    Console.WriteLine("5. Выход");
     string readAction;
-    string pattern = @"^[1-4]$";
+    string pattern = @"^[1-5]$";
 
     do
     {
@@ -25,7 +24,7 @@ while (true)
 
     int numAction = int.Parse(readAction);
 
-    if (numAction == 4)
+    if (numAction == 5)
         break;
 
     switch (numAction)
@@ -75,8 +74,7 @@ while (true)
             Console.WriteLine("Сохранить? (Да/Нет)");
             if (Console.ReadLine() == "Да")
                 budgetManager.AddTransaction(amount, category, comment);
-            //dataTransaction.Add(PersonalBudget.Transaction.Create(id++, amount, category, comment));
-            //FileService.Save(dataTransaction);    
+  
             break;
         case 2:
             Console.Clear();
@@ -107,6 +105,31 @@ while (true)
             Console.Clear();
             Console.Write("Текущий баланс: ");
             Console.WriteLine(budgetManager.GetBalance());            
+            break;
+        case 4:
+            Console.Clear();
+            int transactionId;
+            do
+            {
+                Console.Write("Введите ИД операции: ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out transactionId))
+                {
+                    if (budgetManager.TransactionExists(transactionId))
+                    {
+                        budgetManager.RemoveTransaction(transactionId);
+                        Console.WriteLine($"Операция с ИД - {input} удалена");
+                    }
+                    else
+                        Console.WriteLine($"Операция с ИД - {input} не найдена");
+                    break;
+                }
+                else
+                    Console.WriteLine("ИД должен быть целым числом");                     
+            }
+            while (true);
+
             break;
         default:            
             Console.WriteLine("Не опознанное действие");            
